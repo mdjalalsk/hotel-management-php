@@ -1,0 +1,123 @@
+<div class="row">
+                <?php
+                if (isset($_POST['check'])) {
+                    $checkin = $_POST['checkin'];
+                    $checkout = $_POST['checkout'];
+
+                    // Check for overlapping reservations
+                    $query = "SELECT * FROM rooms WHERE id NOT IN (SELECT room_id FROM bookings WHERE (checkin >= '$checkin' AND checkin < '$checkout') OR (checkout > '$checkin' AND checkout <= '$checkout'))";
+                    $result = $conn->query($query);
+
+                    // If there are available rooms, display them
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+
+                ?>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="room-item">
+                                    <img src="<?= settings()['homepage'] ?>admin/assets/roomimage/<?= $row['images'] ?>" alt="">
+                                    <div class="ri-text">
+                                        <h4><?= $row['name'] ?></h4>
+                                        <h3>2500$<span>/Pernight</span></h3>
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="r-o">Size:</td>
+                                                    <td>30 ft</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="r-o">Capacity:</td>
+                                                    <td>Max persion 3</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="r-o">Room:</td>
+                                                    <td><?= $row['name'] ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="r-o">Services:</td>
+                                                    <td><?= $row['amenities_id'] ?></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <a href="room-details.php?id=<?= $row['room_id'] ?>" class="primary-btn">More Details</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                <?php
+                        }
+                    }
+                }
+                ?>
+                <div class="col-lg-12">
+                    <div class="room-pagination">
+                        <a href="#">1</a>
+                        <a href="#">2</a>
+                        <a href="#">Next <i class="fa fa-long-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+
+
+*************
+
+    <div class="row">
+                <?php
+                $query = "SELECT rooms.id as room_id, roomtypes.image, rooms.name as room_name, amenities.name as amenity_name, roomtypes.name as roomtype_name, roomtypes.rate FROM rooms INNER JOIN amenities ON rooms.amenities_id = amenities.id INNER JOIN roomtypes ON rooms.roomtype_id = roomtypes.id where 1";
+                $result = $conn->query($query);
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+
+                ?>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="room-item">
+                                <img src="<?= settings()['homepage'] ?>admin/assets/roomimage/<?= $row['image'] ?>" alt="">
+                                <div class="ri-text">
+                                    <h4><?= $row['roomtype_name'] ?></h4>
+                                    <h3><?= $row['rate'] ?>$<span>/Pernight</span></h3>
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td class="r-o">Size:</td>
+                                                <td>30 ft</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="r-o">Capacity:</td>
+                                                <td>Max persion 3</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="r-o">Room:</td>
+                                                <td><?= $row['room_name'] ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="r-o">Services:</td>
+                                                <td><?= $row['amenity_name'] ?></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                   <div class="d-flex justify-content-between">
+                                   <a href="room-details.php?id=<?= $row['room_id'] ?>" class="primary-btn">More Details</a>
+                                    <a style="display: inline-block;
+                                                    color: #ffffff;
+                                                    font-size: 13px;
+                                                    text-transform: uppercase;
+                                                    font-weight: 700;
+                                                    background: #dfa974;
+                                                    padding: 14px 28px 13px;" href="#">Booking Now</a>
+                                   </div>
+                                </div>
+                            </div>
+                        </div>
+
+                <?php
+                    }
+                }
+                ?>
+                <div class="col-lg-12">
+                    <div class="room-pagination">
+                        <a href="#">1</a>
+                        <a href="#">2</a>
+                        <a href="#">Next <i class="fa fa-long-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
